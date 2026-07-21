@@ -255,6 +255,70 @@ legend { font-weight: 700; color: var(--orange-900); padding: 0 0.5rem; }
 .dt-list li { margin-bottom: 0.5rem; font-size: 0.92rem; }
 .dt-note { margin: 0; font-size: 0.85rem; color: var(--muted); }
 
+/* ===== Repeatable supplier/product entry cards (Step 2) ===== */
+.entries-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.25rem 0;
+}
+.entry-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  background: var(--panel);
+}
+.entry-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.entry-card-header h3 { margin: 0; color: var(--orange-900); font-size: 1.05rem; }
+.entry-remove-btn {
+  background: none;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.entry-remove-btn:hover { background: var(--danger); color: #fff; }
+.entry-subhead {
+  font-weight: 700;
+  color: var(--orange-700);
+  font-size: 0.85rem;
+  margin: 1.1rem 0 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.entry-card .entry-subhead:first-of-type { margin-top: 0; }
+.add-entry-btn {
+  width: 100%;
+  border: 2px dashed var(--orange-500);
+  background: #fff;
+  color: var(--orange-700);
+  border-radius: var(--radius);
+  padding: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.98rem;
+}
+.add-entry-btn:hover { background: var(--orange-100); }
+.entries-empty-note {
+  color: var(--danger);
+  font-size: 0.88rem;
+  margin: 0 0 0.75rem;
+  display: none;
+}
+.entries-empty-note.show { display: block; }
+
 .wizard-nav {
   display: flex;
   justify-content: space-between;
