@@ -56,6 +56,15 @@ h3 { font-size: 1.15rem; }
   font-size: 1.2rem;
   color: var(--orange-900);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-logo {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 
 .nav-links {
@@ -145,6 +154,8 @@ main { max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
   grid-template-columns: 2fr 1fr 1fr;
   gap: 2rem;
 }
+.footer-brand-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+.footer-brand-row .brand-logo { height: 30px; }
 .site-footer h4 { color: #fff; margin: 0 0 0.5rem; font-size: 0.95rem; }
 .site-footer .brand { color: #fff; }
 .site-footer ul { list-style: none; padding: 0; margin: 0; }
