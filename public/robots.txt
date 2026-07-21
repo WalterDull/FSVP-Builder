@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /wizard.html
+Disallow: /api/
+
+Sitemap: https://fsvp.ftcinternational.com/sitemap.xml
