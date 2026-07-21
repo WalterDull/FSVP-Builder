@@ -43,7 +43,9 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// GET /api/plans -> list current user's plans only
+// GET /api/plans -> list current user's plans only. Each plan may now cover
+// multiple foreign supplier/food product entries, so the list summarizes
+// entry count and supplier names rather than assuming a single supplier.
 router.get("/", async (req, res) => {
   try {
     const result = await db.query(
@@ -52,14 +54,23 @@ router.get("/", async (req, res) => {
       [req.session.userId]
     );
     res.json(
-      result.rows.map((r) => ({
-        id: r.id,
-        companyName: r.data && r.data.companyName,
-        supplierName: r.data && r.data.supplierName,
-        unlocked: r.unlocked,
-        createdAt: r.created_at,
-        updatedAt: r.updated_at,
-      }))
+      result.rows.map((r) => {
+        const data = r.data || {};
+        // Backward-compatible: legacy plans (pre multi-entry) stored a single
+        // supplierName/productName directly on data with no entries[] array.
+        const entries = Array.isArray(data.entries) && data.entries.length
+          ? data.entries
+          : (data.supplierName || data.productName ? [{ supplierName: data.supplierName, productName: data.productName }] : []);
+        return {
+          id: r.id,
+          companyName: data.companyName,
+          supplierNames: entries.map((e) => e && e.supplierName).filter(Boolean),
+          entryCount: entries.length,
+          unlocked: r.unlocked,
+          createdAt: r.created_at,
+          updatedAt: r.updated_at,
+        };
+      })
     );
   } catch (err) {
     console.error("Failed to list plans:", err);

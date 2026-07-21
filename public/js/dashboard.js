@@ -34,10 +34,20 @@
 
   function renderPlanCard(p) {
     var updated = new Date(p.updatedAt).toLocaleDateString();
+    var entryCount = p.entryCount || 0;
+    var supplierSummary;
+    if (!entryCount) {
+      supplierSummary = "No suppliers/products added yet";
+    } else {
+      var names = (p.supplierNames || []).filter(Boolean);
+      var shown = names.slice(0, 3).join(", ");
+      var extra = names.length > 3 ? " +" + (names.length - 3) + " more" : "";
+      supplierSummary = entryCount + (entryCount === 1 ? " supplier/product" : " suppliers/products") + (shown ? ": " + shown + extra : "");
+    }
     return (
       '<div class="plan-card" data-id="' + p.id + '">' +
       "<h3>" + escapeHtml(p.companyName || "Untitled plan") + "</h3>" +
-      "<p class=\"muted\">Supplier: " + escapeHtml(p.supplierName || "—") + " &middot; Updated " + updated + "</p>" +
+      "<p class=\"muted\">" + escapeHtml(supplierSummary) + " &middot; Updated " + updated + "</p>" +
       '<div class="plan-actions">' +
       (p.unlocked
         ? '<a class="btn btn-primary" href="/api/plans/' + p.id + '/download">Download .docx</a>'
