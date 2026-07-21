@@ -1,0 +1,29 @@
+{
+  "name": "fsvp-builder",
+  "version": "2.0.0",
+  "description": "Guided web app for building an FDA Foreign Supplier Verification Program (FSVP) plan under 21 CFR Part 1, Subpart L — a companion tool to FTC International's PCP Planner.",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "migrate": "node db/migrate.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "connect-pg-simple": "^9.0.1",
+    "pg": "^8.11.5",
+    "bcryptjs": "^2.4.3",
+    "docx": "^8.5.0",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "stripe": "^15.7.0",
+    "dotenv": "^16.4.5"
+  },
+  "author": "FTC International",
+  "license": "UNLICENSED",
+  "private": true
+}

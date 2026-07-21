@@ -1,0 +1,44 @@
+# Render Blueprint — deploys the web service and its Postgres database
+# together, same pattern as PCP-Planner. The web service's DATABASE_URL is
+# wired up automatically from the database below (no manual copy-paste of a
+# connection string).
+databases:
+  - name: fsvp-builder-db
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: fsvp-builder
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.20.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: fsvp-builder-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+      - key: APP_BASE_URL
+        value: https://fsvp.ftcinternational.com
+      # Set to "true" temporarily if you want to test unlocking plans before
+      # Stripe is configured. Automatically ignored once STRIPE_SECRET_KEY is set.
+      - key: ALLOW_FREE_UNLOCK
+        value: "false"
+      # Add these once you've set up Stripe (see STRIPE_SETUP.md):
+      # - key: STRIPE_SECRET_KEY
+      #   sync: false
+      # - key: STRIPE_PRICE_ID_ONE_TIME
+      #   sync: false
+      # - key: STRIPE_PRICE_ID_STORAGE_SUBSCRIPTION
+      #   sync: false
+      # - key: STRIPE_WEBHOOK_SECRET
+      #   sync: false
+    autoDeploy: true
