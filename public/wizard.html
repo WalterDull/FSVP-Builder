@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Your FSVP Plan | FSVP Builder</title>
+  <meta name="description" content="Guided step-by-step wizard to build your Foreign Supplier Verification Program (FSVP) plan and download a ready-to-use document.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://fsvp.ftcinternational.com/wizard">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a href="/" class="brand">FSVP Builder</a>
+      <ul class="nav-links">
+        <li><a href="/dashboard.html">My Plans</a></li>
+        <li><a href="https://ftcinternational.com" rel="noopener">FTC International</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="wizard-header">
+    <h1 style="font-size:1.6rem;">Build Your FSVP Plan</h1>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <p class="progress-label"><span id="stepLabel">Step 1 of 9</span> &middot; <span id="stepName">Company Information</span></p>
+  </div>
+
+  <form class="wizard-form" id="fsvpForm" novalidate>
+    <div id="statusBanner"></div>
+
+    <!-- STEP 1: Importer / Company Information -->
+    <section class="wizard-step active" data-step="1">
+      <fieldset>
+        <legend>1. Your Company (Importer) Information</legend>
+        <div class="field">
+          <label for="companyName">Company (importer of record) name *</label>
+          <input type="text" id="companyName" name="companyName" required>
+          <p class="error-text">Please enter your company name.</p>
+        </div>
+        <div class="field">
+          <label for="companyAddress">Company address *</label>
+          <textarea id="companyAddress" name="companyAddress" required></textarea>
+          <p class="error-text">Please enter your company address.</p>
+        </div>
+        <div class="field">
+          <label for="contactName">Qualified individual / FSVP contact name *</label>
+          <input type="text" id="contactName" name="contactName" required>
+          <p class="hint">The person responsible for developing and maintaining this FSVP.</p>
+          <p class="error-text">Please enter a contact name.</p>
+        </div>
+        <div class="field">
+          <label for="contactEmail">Contact email *</label>
+          <input type="email" id="contactEmail" name="contactEmail" required>
+          <p class="error-text">Please enter a valid email.</p>
+        </div>
+        <div class="field">
+          <label for="contactPhone">Contact phone</label>
+          <input type="tel" id="contactPhone" name="contactPhone">
+        </div>
+        <div class="field">
+          <label for="fdaRegistration">FDA facility/importer registration number (if applicable)</label>
+          <input type="text" id="fdaRegistration" name="fdaRegistration">
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 2: Foreign Supplier Information -->
+    <section class="wizard-step" data-step="2">
+      <fieldset>
+        <legend>2. Foreign Supplier Information</legend>
+        <div class="field">
+          <label for="supplierName">Foreign supplier name *</label>
+          <input type="text" id="supplierName" name="supplierName" required>
+          <p class="error-text">Please enter the supplier name.</p>
+        </div>
+        <div class="field">
+          <label for="supplierAddress">Foreign supplier address *</label>
+          <textarea id="supplierAddress" name="supplierAddress" required></textarea>
+          <p class="error-text">Please enter the supplier address.</p>
+        </div>
+        <div class="field">
+          <label for="supplierCountry">Country of production *</label>
+          <input type="text" id="supplierCountry" name="supplierCountry" required>
+          <p class="error-text">Please enter the country of production.</p>
+        </div>
+        <div class="field">
+          <label for="supplierContact">Supplier contact (name / email / phone)</label>
+          <input type="text" id="supplierContact" name="supplierContact">
+        </div>
+        <div class="field">
+          <label for="dunsNumber">DUNS number (if known)</label>
+          <input type="text" id="dunsNumber" name="dunsNumber">
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 3: Food Product Description -->
+    <section class="wizard-step" data-step="3">
+      <fieldset>
+        <legend>3. Food Product Description</legend>
+        <div class="field">
+          <label for="productName">Product name *</label>
+          <input type="text" id="productName" name="productName" required>
+          <p class="error-text">Please enter the product name.</p>
+        </div>
+        <div class="field">
+          <label for="productDescription">Product description *</label>
+          <textarea id="productDescription" name="productDescription" required placeholder="Ingredients, form (fresh/frozen/processed), packaging, etc."></textarea>
+          <p class="error-text">Please describe the product.</p>
+        </div>
+        <div class="field">
+          <label for="intendedUse">Intended use *</label>
+          <select id="intendedUse" name="intendedUse" required>
+            <option value="">Select one</option>
+            <option value="Ready-to-eat">Ready-to-eat</option>
+            <option value="Further processing required">Further processing required</option>
+            <option value="Ingredient for manufacturing">Ingredient for manufacturing</option>
+            <option value="Animal food">Animal food</option>
+            <option value="Other">Other</option>
+          </select>
+          <p class="error-text">Please select an intended use.</p>
+        </div>
+        <div class="field">
+          <label for="rawMaterials">Raw materials / ingredients of note</label>
+          <textarea id="rawMaterials" name="rawMaterials" placeholder="Especially any known allergens or high-risk ingredients"></textarea>
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 4: Hazard Analysis -->
+    <section class="wizard-step" data-step="4">
+      <fieldset>
+        <legend>4. Hazard Analysis</legend>
+        <p class="hint">Identify known or reasonably foreseeable hazards for this food. Check all that may apply, based on your experience, illness data, and other available information.</p>
+
+        <div class="decision-tree-box">
+          <h4>Not sure what counts as a "hazard requiring a control"? Work through this:</h4>
+          <ol class="dt-list">
+            <li><strong>Q1:</strong> Is this a known or reasonably foreseeable hazard for this food? If no, it's not a hazard for FSVP purposes — skip it.</li>
+            <li><strong>Q2:</strong> Is the food "covered produce" and this a biological hazard? If yes, it's automatically deemed to require a control.</li>
+            <li><strong>Q3:</strong> Weighing severity and probability absent controls, would a knowledgeable person establish a control? If yes, it's a "Hazard Requiring a Control." If you're unsure, err toward yes and document your reasoning.</li>
+            <li><strong>Q4:</strong> Will it be controlled by your supplier (or something upstream of them), or by your customer/someone downstream? This determines whether you need full verification (Step 5) or the lighter written-assurance pathway.</li>
+          </ol>
+          <p class="dt-note"><strong>Common trap:</strong> a processing step only "controls" a hazard if the step's own parameters (time, temperature, etc.) achieve it. If control actually depends on an SOP (sanitation, allergen changeover) being followed around the step, the SOP is the real control — not the step itself.</p>
+        </div>
+
+        <div class="field">
+          <label>Biological hazards</label>
+          <div class="checkbox-grid">
+            <label><input type="checkbox" name="biologicalHazards" value="Salmonella"> Salmonella</label>
+            <label><input type="checkbox" name="biologicalHazards" value="Listeria monocytogenes"> Listeria monocytogenes</label>
+            <label><input type="checkbox" name="biologicalHazards" value="E. coli (pathogenic)"> E. coli (pathogenic)</label>
+            <label><input type="checkbox" name="biologicalHazards" value="Norovirus/Hepatitis A"> Norovirus / Hepatitis A</label>
+            <label><input type="checkbox" name="biologicalHazards" value="Parasites"> Parasites</label>
+            <label><input type="checkbox" name="biologicalHazards" value="None identified"> None identified</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Chemical hazards</label>
+          <div class="checkbox-grid">
+            <label><input type="checkbox" name="chemicalHazards" value="Undeclared allergens"> Undeclared allergens</label>
+            <label><input type="checkbox" name="chemicalHazards" value="Pesticide residues"> Pesticide residues</label>
+            <label><input type="checkbox" name="chemicalHazards" value="Mycotoxins"> Mycotoxins</label>
+            <label><input type="checkbox" name="chemicalHazards" value="Heavy metals"> Heavy metals</label>
+            <label><input type="checkbox" name="chemicalHazards" value="Unapproved food additives"> Unapproved food additives</label>
+            <label><input type="checkbox" name="chemicalHazards" value="None identified"> None identified</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Physical hazards</label>
+          <div class="checkbox-grid">
+            <label><input type="checkbox" name="physicalHazards" value="Glass"> Glass</label>
+            <label><input type="checkbox" name="physicalHazards" value="Metal fragments"> Metal fragments</label>
+            <label><input type="checkbox" name="physicalHazards" value="Plastic"> Plastic</label>
+            <label><input type="checkbox" name="physicalHazards" value="Stones/foreign matter"> Stones / foreign matter</label>
+            <label><input type="checkbox" name="physicalHazards" value="None identified"> None identified</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="hazardNotes">Hazard analysis notes</label>
+          <textarea id="hazardNotes" name="hazardNotes" placeholder="Basis for hazard identification (illness data, scientific literature, supplier history, etc.)"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="hazardRequiringControl">Does this food have a hazard requiring control? (Q3) *</label>
+          <select id="hazardRequiringControl" name="hazardRequiringControl" required>
+            <option value="">Select one</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+          <p class="error-text">Please make a selection.</p>
+        </div>
+        <div class="field">
+          <label for="hazardControlledBy">Who controls this hazard? (Q4)</label>
+          <select id="hazardControlledBy" name="hazardControlledBy">
+            <option value="">Select one</option>
+            <option value="Foreign supplier or upstream entity">Foreign supplier, or an entity upstream of the supplier</option>
+            <option value="Customer or downstream entity">My customer, or a later entity in distribution</option>
+            <option value="Not applicable / no hazard requiring control">Not applicable</option>
+          </select>
+          <p class="hint">If your customer or someone downstream controls it, the § 1.507 written-assurance pathway applies instead of full verification.</p>
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 5: Supplier Approval & Verification -->
+    <section class="wizard-step" data-step="5">
+      <fieldset>
+        <legend>5. Supplier Approval &amp; Verification Activities</legend>
+        <div class="field">
+          <label for="approvalBasis">Basis for supplier approval *</label>
+          <textarea id="approvalBasis" name="approvalBasis" required placeholder="E.g., hazard analysis results, supplier's food safety performance history, applicable FDA food safety regulations, certifications"></textarea>
+          <p class="error-text">Please describe the basis for approving this supplier.</p>
+        </div>
+        <div class="field">
+          <label for="verificationActivity">Primary verification activity *</label>
+          <select id="verificationActivity" name="verificationActivity" required>
+            <option value="">Select one</option>
+            <option value="Onsite audit">Onsite audit</option>
+            <option value="Sampling and testing">Sampling and testing of the food</option>
+            <option value="Review of supplier's food safety records">Review of supplier's relevant food safety records</option>
+            <option value="Other appropriate procedure">Other appropriate supplier verification procedure</option>
+          </select>
+          <p class="error-text">Please select a verification activity.</p>
+        </div>
+        <div class="field">
+          <label for="verificationFrequency">Verification frequency *</label>
+          <select id="verificationFrequency" name="verificationFrequency" required>
+            <option value="">Select one</option>
+            <option value="Prior to first shipment">Prior to first shipment, then annually</option>
+            <option value="Annually">Annually</option>
+            <option value="Every shipment">Every shipment</option>
+            <option value="Other">Other (see notes)</option>
+          </select>
+          <p class="error-text">Please select a frequency.</p>
+        </div>
+        <div class="field">
+          <label for="verificationJustification">Justification for chosen activity &amp; frequency</label>
+          <textarea id="verificationJustification" name="verificationJustification" placeholder="Why this activity/frequency is appropriate given the hazard analysis and supplier's performance"></textarea>
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 6: Standard Operating Procedures -->
+    <section class="wizard-step" data-step="6">
+      <fieldset>
+        <legend>6. Standard Operating Procedures</legend>
+        <p class="hint">Select the SOPs that apply to your program. These mirror the SOP set used in FTC International's domestic PCP, adapted to the FSVP importer's verification role, and will be included in full in your generated document.</p>
+
+        <div class="field">
+          <label>Core FSVP SOPs</label>
+          <div class="checkbox-grid">
+            <label><input type="checkbox" name="selectedSops" value="supplierApproval" checked> Foreign Supplier Approval</label>
+            <label><input type="checkbox" name="selectedSops" value="verificationDetermination" checked> Determination of Verification Activities</label>
+            <label><input type="checkbox" name="selectedSops" value="onsiteAudit"> Onsite Audit</label>
+            <label><input type="checkbox" name="selectedSops" value="samplingTesting"> Sampling &amp; Testing</label>
+            <label><input type="checkbox" name="selectedSops" value="recordsReview"> Review of Food Safety Records</label>
+            <label><input type="checkbox" name="selectedSops" value="vendorGuaranteeCoa"> Vendor Guarantee &amp; Certificate of Analysis</label>
+            <label><input type="checkbox" name="selectedSops" value="labelReview"> Label Review</label>
+            <label><input type="checkbox" name="selectedSops" value="receivingTraceability" checked> Import Receiving &amp; Lot Traceability</label>
+            <label><input type="checkbox" name="selectedSops" value="correctiveAction" checked> Corrective Action</label>
+            <label><input type="checkbox" name="selectedSops" value="complaintRecall"> Customer Complaint &amp; Recall</label>
+            <label><input type="checkbox" name="selectedSops" value="reassessment" checked> Reassessment</label>
+            <label><input type="checkbox" name="selectedSops" value="recordkeeping" checked> Recordkeeping</label>
+            <label><input type="checkbox" name="selectedSops" value="jobDescriptions"> Employee Job Descriptions / QI &amp; Auditor Designation</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Facility-level SOPs (only if you also operate a domestic facility)</label>
+          <div class="checkbox-grid">
+            <label><input type="checkbox" name="selectedSops" value="sanitation"> Sanitation</label>
+            <label><input type="checkbox" name="selectedSops" value="pestControl"> Pest Control</label>
+            <label><input type="checkbox" name="selectedSops" value="preOpInspection"> Pre-Operational Inspection</label>
+            <label><input type="checkbox" name="selectedSops" value="preventiveMaintenance"> Preventive Maintenance</label>
+            <label><input type="checkbox" name="selectedSops" value="waterTesting"> Water Potability &amp; Annual Testing</label>
+            <label><input type="checkbox" name="selectedSops" value="temperatureMonitoring"> Temperature Monitoring</label>
+          </div>
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 7: Corrective Actions -->
+    <section class="wizard-step" data-step="7">
+      <fieldset>
+        <legend>7. Corrective Actions</legend>
+        <div class="field">
+          <label for="correctiveActions">Corrective action procedure *</label>
+          <textarea id="correctiveActions" name="correctiveActions" required placeholder="What happens if the supplier is found out of compliance? E.g., discontinue use of supplier, increase verification, require supplier corrective action plan, notify FDA if applicable"></textarea>
+          <p class="error-text">Please describe your corrective action process.</p>
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 8: Reassessment -->
+    <section class="wizard-step" data-step="8">
+      <fieldset>
+        <legend>8. Reassessment Schedule</legend>
+        <div class="field">
+          <label for="reassessmentSchedule">Reassessment schedule *</label>
+          <select id="reassessmentSchedule" name="reassessmentSchedule" required>
+            <option value="">Select one</option>
+            <option value="Every 3 years">Every 3 years (standard)</option>
+            <option value="Sooner if new information arises">Sooner, if new information arises (e.g., recall, new hazard, supplier change)</option>
+          </select>
+          <p class="error-text">Please select a reassessment schedule.</p>
+        </div>
+        <div class="field">
+          <label for="lastReassessmentDate">Date of this assessment</label>
+          <input type="date" id="lastReassessmentDate" name="lastReassessmentDate">
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 9: Review & Save -->
+    <section class="wizard-step" data-step="9">
+      <fieldset>
+        <legend>9. Review &amp; Save Your FSVP Plan</legend>
+        <p class="hint">Review your entries below, then save. You'll unlock and download the finished .docx from your dashboard. You can go back to any step to make changes.</p>
+        <div id="summaryContainer"></div>
+      </fieldset>
+    </section>
+
+    <div class="wizard-nav">
+      <button type="button" class="btn btn-secondary" id="prevBtn">&larr; Back</button>
+      <button type="button" class="btn btn-primary" id="nextBtn">Next &rarr;</button>
+      <button type="button" class="btn btn-primary" id="generateBtn" style="display:none;">Save Plan &amp; Go to Dashboard</button>
+    </div>
+  </form>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div>
+        <p class="brand">FSVP Builder</p>
+        <p>A free tool for drafting Foreign Supplier Verification Program plans.</p>
+      </div>
+      <div>
+        <h4>Powered By</h4>
+        <ul>
+          <li><a href="https://ftcinternational.com" rel="noopener">FTC International</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="fine-print">This tool assists with FSVP plan documentation and does not constitute legal advice.</p>
+  </footer>
+
+  <script src="/js/wizard.js"></script>
+</body>
+</html>
