@@ -15,6 +15,15 @@
   var CHEM_HAZARDS = ["Undeclared allergens", "Pesticide residues", "Mycotoxins", "Heavy metals", "Unapproved food additives", "None identified"];
   var PHYS_HAZARDS = ["Glass", "Metal fragments", "Plastic", "Stones/foreign matter", "None identified"];
 
+  // 21 CFR 1.502(c): an importer that is also the receiving facility
+  // manufacturing/processing the food itself can be deemed FSVP-compliant
+  // for a hazard controlled through its own Part 117/507 preventive
+  // controls or supply-chain program, instead of running full supplier
+  // verification for that hazard. § 1.509 (importer ID at entry) still
+  // applies regardless. This exact string is also used server-side in
+  // lib/generateDocument.js — keep the two in sync.
+  var SELF_MFG_VALUE = "Importer itself, as a receiving facility under Part 117/507 (§1.502(c))";
+
   var form = document.getElementById("fsvpForm");
   var steps = Array.prototype.slice.call(document.querySelectorAll(".wizard-step"));
   var totalSteps = steps.length;
@@ -44,6 +53,7 @@
       productName: "", productDescription: "", intendedUse: "", rawMaterials: "",
       biologicalHazards: [], chemicalHazards: [], physicalHazards: [], hazardNotes: "",
       hazardRequiringControl: "", hazardControlledBy: "",
+      selfManufacturedBasis: "", selfManufacturedDetails: "",
       approvalBasis: "", verificationActivity: "", verificationFrequency: "", verificationJustification: ""
     };
   }
@@ -114,7 +124,15 @@
       checkboxGridField(idx, "physicalHazards", "Physical hazards", PHYS_HAZARDS, entry.physicalHazards || []) +
       textareaField(idx, "hazardNotes", "Hazard analysis notes", entry.hazardNotes, false, "Basis for hazard identification (illness data, scientific literature, supplier history, etc.)") +
       selectField(idx, "hazardRequiringControl", "Does this food have a hazard requiring control? (Q3) *", entry.hazardRequiringControl, true, [["", "Select one"], ["Yes", "Yes"], ["No", "No"]]) +
-      selectField(idx, "hazardControlledBy", "Who controls this hazard? (Q4)", entry.hazardControlledBy, false, [["", "Select one"], ["Foreign supplier or upstream entity", "Foreign supplier, or an entity upstream of the supplier"], ["Customer or downstream entity", "My customer, or a later entity in distribution"], ["Not applicable / no hazard requiring control", "Not applicable"]], "If your customer or someone downstream controls it, the § 1.507 written-assurance pathway applies instead of full verification.") +
+      selectField(idx, "hazardControlledBy", "Who controls this hazard? (Q4)", entry.hazardControlledBy, false, [["", "Select one"], ["Foreign supplier or upstream entity", "Foreign supplier, or an entity upstream of the supplier"], ["Customer or downstream entity", "My customer, or a later entity in distribution"], [SELF_MFG_VALUE, "Me/us — we manufacture or process this food ourselves as a receiving facility"], ["Not applicable / no hazard requiring control", "Not applicable"]], "If your customer or someone downstream controls it, the § 1.507 written-assurance pathway applies instead of full verification. If you control it yourself as a receiving facility, § 1.502(c) may deem you FSVP-compliant for this hazard — § 1.509 (importer ID at entry) still applies either way.") +
+      '<div class="field self-mfg-block" data-idx="' + idx + '" style="display:' + (entry.hazardControlledBy === SELF_MFG_VALUE ? "block" : "none") + ';">' +
+        '<div class="decision-tree-box" style="margin:0 0 0;">' +
+          '<h4 style="margin-bottom:0.6rem;">§ 1.502(c) Deemed FSVP Compliance — Basis</h4>' +
+          selectField(idx, "selfManufacturedBasis", "Which condition applies at your facility? *", entry.selfManufacturedBasis, false, [["", "Select one"], ["Preventive control at my facility (§117.135/§507.34)", "I implement a preventive control for this hazard under § 117.135 / § 507.34"], ["Not required to implement a preventive control (§117.136/§507.36)", "I am not required to implement a preventive control under § 117.136 / § 507.36 for this hazard"], ["Compliant supply-chain program (Part 117 Subpart G / Part 507 Subpart E)", "I have a compliant risk-based supply-chain program under Part 117 Subpart G / Part 507 Subpart E"]]) +
+          textareaField(idx, "selfManufacturedDetails", "Describe the control / program", entry.selfManufacturedDetails, false, "E.g., \"Roasting step validated to achieve 5-log Salmonella reduction — see PCHF Plan §4.2\"") +
+          '<p class="dt-note">This deemed-compliance status does not excuse 21 CFR 1.509 (importer identification at entry) — that still applies.</p>' +
+        "</div>" +
+      "</div>" +
 
       '<p class="entry-subhead">Supplier Approval &amp; Verification</p>' +
       textareaField(idx, "approvalBasis", "Basis for supplier approval *", entry.approvalBasis, true, "E.g., hazard analysis results, supplier's food safety performance history, applicable FDA food safety regulations, certifications") +
@@ -137,6 +155,11 @@
   function updateEntryTitle(idx) {
     var el = entriesContainer.querySelector('.entry-title[data-idx="' + idx + '"]');
     if (el) el.textContent = entryTitle(entries[idx]);
+  }
+
+  function updateSelfMfgVisibility(idx) {
+    var block = entriesContainer.querySelector('.self-mfg-block[data-idx="' + idx + '"]');
+    if (block) block.style.display = entries[idx].hazardControlledBy === SELF_MFG_VALUE ? "block" : "none";
   }
 
   entriesContainer.addEventListener("input", function (e) {
@@ -164,6 +187,7 @@
       entries[idx][f] = arr;
     } else {
       entries[idx][f] = t.value;
+      if (f === "hazardControlledBy") updateSelfMfgVisibility(idx);
     }
   });
 
@@ -225,7 +249,13 @@
       window.scrollTo({ top: entriesEmptyNote.offsetTop - 100, behavior: "smooth" });
       return;
     }
-    if (!validateStep(currentStep)) return;
+    if (!validateStep(currentStep)) {
+      var firstInvalid = steps[currentStep - 1].querySelector(".field.invalid");
+      if (firstInvalid) firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+      setStatus("Please fill in all required fields (highlighted in red) before continuing.", "error");
+      return;
+    }
+    setStatus("", null);
     if (currentStep < totalSteps) {
       currentStep++;
       showStep(currentStep);
@@ -262,6 +292,7 @@
         productName: e.productName, productDescription: e.productDescription, intendedUse: e.intendedUse, rawMaterials: e.rawMaterials,
         biologicalHazards: (e.biologicalHazards || []).slice(), chemicalHazards: (e.chemicalHazards || []).slice(), physicalHazards: (e.physicalHazards || []).slice(),
         hazardNotes: e.hazardNotes, hazardRequiringControl: e.hazardRequiringControl, hazardControlledBy: e.hazardControlledBy,
+        selfManufacturedBasis: e.selfManufacturedBasis, selfManufacturedDetails: e.selfManufacturedDetails,
         approvalBasis: e.approvalBasis, verificationActivity: e.verificationActivity, verificationFrequency: e.verificationFrequency, verificationJustification: e.verificationJustification
       };
     });
@@ -299,6 +330,7 @@
       ["Chemical hazards", (e.chemicalHazards || []).join(", ") || "None selected"],
       ["Physical hazards", (e.physicalHazards || []).join(", ") || "None selected"],
       ["Hazard requiring control?", e.hazardRequiringControl], ["Controlled by", e.hazardControlledBy],
+      ["§1.502(c) basis", e.selfManufacturedBasis], ["§1.502(c) control description", e.selfManufacturedDetails],
       ["Approval basis", e.approvalBasis], ["Verification activity", e.verificationActivity],
       ["Frequency", e.verificationFrequency], ["Justification", e.verificationJustification]
     ];
