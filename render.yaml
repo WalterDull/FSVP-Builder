@@ -28,10 +28,12 @@ services:
         value: production
       - key: APP_BASE_URL
         value: https://fsvp.ftcinternational.com
+      # Dashboard-managed (not synced from this file), so you can toggle it
+      # in Render's Environment tab without it reverting on the next deploy.
       # Set to "true" temporarily if you want to test unlocking plans before
       # Stripe is configured. Automatically ignored once STRIPE_SECRET_KEY is set.
       - key: ALLOW_FREE_UNLOCK
-        value: "false"
+        sync: false
       # Add these once you've set up Stripe (see STRIPE_SETUP.md):
       # - key: STRIPE_SECRET_KEY
       #   sync: false
